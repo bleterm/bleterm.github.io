@@ -4,14 +4,12 @@
   var myCharacteristic;
   var deviceName;
   function connect() {
-    let serviceUuid = "0000ffe0-0000-1000-8000-00805f9b34fb";
-    let characteristicUuid = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    let serviceUuid = "00001530-1212-efde-1523-785feabcd123";
+    let characteristicUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
     navigator.bluetooth.requestDevice({
 		//filters: [{services: [serviceUuid]}]
-	  filters: [{
-	    namePrefix: 'V',
-	  }],
-	  optionalServices: ['00001530-1212-efde-1523-785feabcd123']		
+		acceptAllDevices: true,
+		optionalServices: [serviceUuid]
 	})
     .then(device => {
       log('Connecting...');
@@ -20,28 +18,12 @@
     })
     .then(server => {
       console.log('Getting Service...');
-      //return server.getPrimaryService(serviceUuid);
-      return server.getPrimaryService();
+      return server.getPrimaryService(serviceUuid);
     })
     .then(service => {
       console.log('Getting Characteristic...');
       return service.getCharacteristic(characteristicUuid);
     })
-	.then(services => {
-    log('Getting Characteristics...');
-    let queue = Promise.resolve();
-    services.forEach(service => {
-      queue = queue.then(_ => service.getCharacteristics().then(characteristics => {
-        log('> Service: ' + service.uuid);
-        characteristics.forEach(characteristic => {
-          log('>> Characteristic: ' + characteristic.uuid + ' ' +
-              getSupportedProperties(characteristic));
-        });
-      }));
-    });
-    return queue;
-	})
-	
     .then(characteristic => {
       myCharacteristic = characteristic;
       return myCharacteristic.startNotifications().then(_ => {
@@ -94,8 +76,7 @@
 </script>
 
 <head>
-  <title>Web-BleTerminal</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <title>WebBle Terminal</title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
