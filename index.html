@@ -7,12 +7,8 @@
     let serviceUuid = "85661068-5aee-11e7-907b-a6006ad3dba0";
     let characteristicUuid = "85661950-5aee-11e7-907b-a6006ad3dba0";
     navigator.bluetooth.requestDevice({
-		filters: [
-		{services: [serviceUuid],
-		 namePrefix: 'M'}
-		]
-		//acceptAllDevices: true,
-		//optionalServices: [serviceUuid]
+		acceptAllDevices: true,
+		optionalServices: [serviceUuid]
 	})
     .then(device => {
       log('Connecting...');
@@ -89,7 +85,7 @@
 </head>
 
 <body>
-  <div class="header">WEBBLE TERM 5</div>
+  <div class="header">WEBBLE TERM 6</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
