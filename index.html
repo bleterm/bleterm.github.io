@@ -1,43 +1,130 @@
----
-feature_name: Web Bluetooth / Discover Services & Characteristics
-chrome_version: 53
-check_min_version: true
-feature_id: 5264933985976320
-icon_url: icon.png
-index: index.html
----
-
-{% include_relative _includes/intro.html %}
-
-<p>This sample illustrates the use of the Web Bluetooth API to discover all
-accessible primary services with <code>server.getPrimaryServices</code> and their
-characteristics from a nearby Bluetooth Low Energy Device. You may want to try
-this demo with the BLE Peripheral Simulator App from the <a target="_blank"
-href="https://play.google.com/store/apps/details?id=io.github.webbluetoothcg.bletestperipheral">Google
-Play Store</a> and check out the <a
-href="discover-services-and-characteristics-async-await.html">Discover Services &
-Characteristics Sample (Async Await)</a> sample.</p>
-
-<form>
-  <input id="optionalServices" type="text" list="services" size=40 placeholder="Bluetooth Services (e.g. generic_access, 0x1234)">
-  <button>Discover services & characteristics</button>
-</form>
-
-{% include_relative _includes/datalist-services.html %}
-
-{% include output_helper.html %}
-
-{% include js_snippet.html filename='discover-services-and-characteristics.js' %}
+<html>
 
 <script>
-  document.querySelector('form').addEventListener('submit', function(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    if (isWebBluetoothEnabled()) {
-      ChromeSamples.clearLog();
-      onButtonClick();
+  var myCharacteristic;
+  var deviceName;
+  function connect() {
+    let serviceUuid = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    let characteristicUuid = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    navigator.bluetooth.requestDevice({
+		//filters: [{services: [serviceUuid]}]
+	  filters: [{
+	    namePrefix: 'v',
+	  }],
+	  optionalServices: ['00001530-1212-efde-1523-785feabcd123']		
+	})
+    .then(device => {
+      log('Connecting...');
+      deviceName = device.name;
+      return device.gatt.connect();
+    })
+    .then(server => {
+      console.log('Getting Service...');
+      //return server.getPrimaryService(serviceUuid);
+      return server.getPrimaryService();
+    })
+    .then(service => {
+      console.log('Getting Characteristic...');
+      return service.getCharacteristic(characteristicUuid);
+    })
+	.then(services => {
+    log('Getting Characteristics...');
+    let queue = Promise.resolve();
+    services.forEach(service => {
+      queue = queue.then(_ => service.getCharacteristics().then(characteristics => {
+        log('> Service: ' + service.uuid);
+        characteristics.forEach(characteristic => {
+          log('>> Characteristic: ' + characteristic.uuid + ' ' +
+              getSupportedProperties(characteristic));
+        });
+      }));
+    });
+    return queue;
+	})
+	
+    .then(characteristic => {
+      myCharacteristic = characteristic;
+      return myCharacteristic.startNotifications().then(_ => {
+        console.log('> Notifications started');
+        log("Connected to: " + deviceName);
+        myCharacteristic.addEventListener('characteristicvaluechanged',
+            handleNotifications);
+      });
+    })
+    .catch(error => {
+      console.log('Argh! ' + error);
+    });
+  }
+  function disconnect() {
+    if (myCharacteristic) {
+      myCharacteristic.stopNotifications()
+      .then(_ => {
+        console.log('> Notifications stopped');
+        log("Disconnected")
+        myCharacteristic.removeEventListener('characteristicvaluechanged',
+            handleNotifications);
+      })
+      .catch(error => {
+        console.log('Argh! ' + error);
+      });
     }
-  });
+  }
+  function handleNotifications(event) {
+    let value = event.target.value;
+    log(deviceName + "> " + new TextDecoder().decode(value));
+    console.log('> Received: ' + new TextDecoder().decode(value));
+  }
+  function send() {
+    var data = document.getElementById("input").value;
+    log("You> " + data);
+    myCharacteristic.writeValue(str2ab(data+"\n"))
+    document.getElementById("input").value = "";
+  }
+  function str2ab(str) {
+    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var bufView = new Uint16Array(buf);
+    for (var i=0, strLen=str.length; i<strLen; i++) {
+      bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+  }
+  function log(str) {
+    document.getElementById("term").value += str+"\n";
+  }
 </script>
 
-{% include_relative _includes/utils.html %}
+<head>
+  <title>Web-Bluetooth Terminal</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="header">WEB-BLUETOOTH TERMINAL</div>
+  <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
+  <div class="footer">
+    <div class="inputfield">
+      <input id ="input" type="text" class="input" placeholder="Write something to send here...">
+    </div>
+      <div class="button" style="background-color: black;">
+        <button onclick="send()">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+      <div id="connect" class="button" style="background-color: green;" >
+        <button onclick="connect()">
+          <i class="fa fa-plug"></i>
+        </button>
+      </div>
+      <div class="button" style="background-color: red;">
+        <button onclick="disconnect()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+  </div>
+</body>
+</html>
