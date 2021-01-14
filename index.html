@@ -4,7 +4,7 @@
   var myCharacteristic;
   var deviceName;
   function connect() {
-    let serviceUuid = "8566000-5AEE-11E7-907B-A6006AD3DBA0";
+    let serviceUuid = "85660000-5AEE-11E7-907B-A6006AD3DBA0";
     let characteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
     navigator.bluetooth.requestDevice({
 		filters: [
@@ -87,7 +87,6 @@
 </head>
 
 <body>
-  <div class="header">WEBBLE TERM 9</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
