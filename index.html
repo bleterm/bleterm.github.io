@@ -1,11 +1,14 @@
 <html>
 
 <script>
-  var myCharacteristic;
+  var myService;
+  var myRxCharacteristic;
+  var myTxCharacteristic;
   var deviceName;
   function connect() {
     let serviceUuid = "85660001-5AEE-11E7-907B-A6006AD3DBA0";
-    let characteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
+    let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
+    let txCharacteristicUuid = "85660003-5AEE-11E7-907B-A6006AD3DBA0";
     navigator.bluetooth.requestDevice({
       filters: [{
         services: ['85660001-5AEE-11E7-907B-A6006AD3DBA0']
@@ -21,15 +24,20 @@
       return server.getPrimaryService(serviceUuid);
     })
     .then(service => {
+      myService = service;
       console.log('Getting Characteristic...');
-      return service.getCharacteristic(characteristicUuid);
+      return service.getCharacteristic(txCharacteristicUuid);
     })
     .then(characteristic => {
-      myCharacteristic = characteristic;
-      return myCharacteristic.startNotifications().then(_ => {
+      myTxCharacteristic = characteristic;
+      return myService.getCharacteristic(rxCharacteristicUuid);
+    })
+    .then(characteristic => {
+      myRxCharacteristic = characteristic;
+      return myRxCharacteristic.startNotifications().then(_ => {
         console.log('> Notifications started');
-        log("Connected to: " + deviceName);
-        myCharacteristic.addEventListener('characteristicvaluechanged',
+        log("===== " + deviceName + " is connected =====");
+        myRxCharacteristic.addEventListener('characteristicvaluechanged',
             handleNotifications);
       });
     })
@@ -38,12 +46,12 @@
     });
   }
   function disconnect() {
-    if (myCharacteristic) {
-      myCharacteristic.stopNotifications()
+    if (myRxCharacteristic) {
+      myRxCharacteristic.stopNotifications()
       .then(_ => {
         console.log('> Notifications stopped');
-        log("Disconnected")
-        myCharacteristic.removeEventListener('characteristicvaluechanged',
+        log("=====" + deviceName + " is disconnected =====")
+        myRxCharacteristic.removeEventListener('characteristicvaluechanged',
             handleNotifications);
       })
       .catch(error => {
@@ -53,13 +61,13 @@
   }
   function handleNotifications(event) {
     let value = event.target.value;
-    log(deviceName + "> " + new TextDecoder().decode(value));
+    log( new TextDecoder().decode(value));
     console.log('> Received: ' + new TextDecoder().decode(value));
   }
   function send() {
     var data = document.getElementById("input").value;
     log("You> " + data);
-    myCharacteristic.writeValue(str2ab(data+"\n"))
+    myTxCharacteristic.writeValue(str2ab(data+"\n"))
     document.getElementById("input").value = "";
   }
   function str2ab(str) {
