@@ -74,18 +74,18 @@
   function myKeyPress(event) {
     var x = event.charCode;
     log(x);
-    myTxCharacteristic.writeValue([65 66 67])
+    myTxCharacteristic.writeValue([65 66 67]);
   }
   
   function myKeyDown(event) {
     var x = event.keyCode;
     if (x==8) {
       log("BS");
-      myTxCharacteristic.writeValue([8])
+      myTxCharacteristic.writeValue([8]);
     }
     else if (x==9) {
       log("Tab");
-      myTxCharacteristic.writeValue([9])      
+      myTxCharacteristic.writeValue([9]);     
     }
   }
   
@@ -122,7 +122,7 @@
 </head>
 
 <body onload="connect()">
-  <div class="header">WEBBLE TERM 15</div>
+  <div class="header">WEBBLE TERM 16</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
