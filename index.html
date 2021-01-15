@@ -1,10 +1,10 @@
 <html>
 
 <script>
+  var myDevice;
   var myService;
   var myRxCharacteristic;
   var myTxCharacteristic;
-  var deviceName;
   function connect() {
     let serviceUuid = "85660001-5AEE-11E7-907B-A6006AD3DBA0";
     let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
@@ -15,8 +15,9 @@
       }]
     })
     .then(device => {
-      log('Connecting...');
-      deviceName = device.name;
+      myDevice = device;
+      // Set up event listener for when device gets disconnected.
+      device.addEventListener('gattserverdisconnected', onDisconnected);
       return device.gatt.connect();
     })
     .then(server => {
@@ -36,7 +37,7 @@
       myRxCharacteristic = characteristic;
       return myRxCharacteristic.startNotifications().then(_ => {
         console.log('> Notifications started');
-        log("===== " + deviceName + " is connected =====");
+        log("===== ${myDevice.name} is connected =====\r\n");
         myRxCharacteristic.addEventListener('characteristicvaluechanged',
             handleNotifications);
       });
@@ -45,12 +46,13 @@
       console.log('Argh! ' + error);
     });
   }
-  function disconnect() {
+  
+  function onDisconnected(event) {
     if (myRxCharacteristic) {
       myRxCharacteristic.stopNotifications()
       .then(_ => {
         console.log('> Notifications stopped');
-        log("=====" + deviceName + " is disconnected =====")
+        log("\r\n===== ${myDevice.name} is disconnected =====\r\n")
         myRxCharacteristic.removeEventListener('characteristicvaluechanged',
             handleNotifications);
       })
@@ -59,6 +61,10 @@
       });
     }
   }
+  function disconnect() {
+    myDevice.gatt.disconnect();
+  }
+  
   function handleNotifications(event) {
     let value = event.target.value;
     log( new TextDecoder().decode(value));
@@ -67,7 +73,7 @@
   function send() {
     var data = document.getElementById("input").value;
     log("You> " + data);
-    myTxCharacteristic.writeValue(str2ab(data+"\n"))
+    myTxCharacteristic.writeValue(data)
     document.getElementById("input").value = "";
   }
   function str2ab(str) {
@@ -95,7 +101,7 @@
 </head>
 
 <body>
-  <div class="header">WEBBLE TERM 5</div>
+  <div class="header">WEBBLE TERM 7</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
