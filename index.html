@@ -78,6 +78,7 @@
     bufView[0] = x;
     log(String.fromCharCode(x));
     myTxCharacteristic.writeValue(buf);
+    document.getElementById("input").value = "";
   }
   
   function myKeyDown(event) {
@@ -93,6 +94,7 @@
       log("Tab");
       myTxCharacteristic.writeValue(buf);     
     }
+    document.getElementById("input").value = "";
   }
   
   function send() {
@@ -128,7 +130,7 @@
 </head>
 
 <body onload="connect()">
-  <div class="header">WEBBLE TERM 18</div>
+  <div class="header">WEBBLE TERM 19</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
