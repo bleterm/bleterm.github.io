@@ -47,7 +47,7 @@ div.footer {
 
 div.inputfield {
   text-align: left;
-  width: calc(100% - 150px);
+  width: calc(100% - 250px);
   background-color: inherit;
   height: inherit;
 }
