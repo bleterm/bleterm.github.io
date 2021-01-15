@@ -58,11 +58,8 @@
       .then(_ => {
         log("\r\n===== remove listen =====\r\n");
         myRxCharacteristic.removeEventListener('characteristicvaluechanged',
-            handleNotifications)
-        .then(_ => {
-          log("\r\n===== disconnect =====\r\n");
-          myDevice.gatt.disconnect();
-        })
+            handleNotifications);
+        myDevice.gatt.disconnect();
       })
       .catch(error => {
         console.log('Argh! ' + error);
@@ -77,7 +74,6 @@
   }
   function send() {
     var data = document.getElementById("input").value;
-    log("You> " + data);
     myTxCharacteristic.writeValue(str2ab(data))
     document.getElementById("input").value = "";
   }
