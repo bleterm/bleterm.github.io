@@ -115,21 +115,22 @@
     elem.value += str;
     elem.scrollTop = elem.scrollHeight;
   }
+  
+  function startup() {
+    var elem = document.getElementById("term");
+    elem.value = "BLE Terminal v1.0";  
+  }
+  
 </script>
 
 
 <head>
-  <title>WebBle Terminal</title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>BLETerm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="mobile-web-app-capable" content="yes">  
 </head>
 
-<body onload="connect()">
-  <div class="header">WEBBLE TERM 20</div>
+<body onload="startup()">
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
