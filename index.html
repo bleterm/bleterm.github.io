@@ -82,13 +82,16 @@
   
   function myKeyDown(event) {
     var x = event.keyCode;
+    var buf = new ArrayBuffer(1); // 1 byte for each char
+    var bufView = new Uint8Array(buf);
+    bufView[0] = x;
     if (x==8) {
       log("BS");
-      myTxCharacteristic.writeValue([8]);
+      myTxCharacteristic.writeValue(buf);
     }
     else if (x==9) {
       log("Tab");
-      myTxCharacteristic.writeValue([9]);     
+      myTxCharacteristic.writeValue(buf);     
     }
   }
   
@@ -125,7 +128,7 @@
 </head>
 
 <body onload="connect()">
-  <div class="header">WEBBLE TERM 17</div>
+  <div class="header">WEBBLE TERM 18</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
