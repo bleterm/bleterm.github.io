@@ -98,8 +98,7 @@
   }
   
   function send() {
-    var data = document.getElementById("input").value;
-    log(data+"\r\n\r\n\r\n\r\n\r\n")
+    document.getElementById("input").focus();
     //myTxCharacteristic.writeValue(str2ab(data))
     //document.getElementById("input").value = "";
   }
@@ -130,7 +129,7 @@
 </head>
 
 <body onload="connect()">
-  <div class="header">WEBBLE TERM 19</div>
+  <div class="header">WEBBLE TERM 20</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
