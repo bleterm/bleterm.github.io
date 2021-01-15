@@ -48,22 +48,26 @@
   }
   
   function onDisconnected(event) {
-    log("\r\n===== disconnecting =====\r\n");
+    log("\r\n===== ${myDevice.name} is disconnected =====\r\n")
+  }
+  
+  function disconnect() {
+    log("\r\n===== stop notify =====\r\n");
     if (myRxCharacteristic) {
       myRxCharacteristic.stopNotifications()
       .then(_ => {
-        console.log('> Notifications stopped');
-        log("\r\n===== ${myDevice.name} is disconnected =====\r\n")
+        log("\r\n===== remove listen =====\r\n");
         myRxCharacteristic.removeEventListener('characteristicvaluechanged',
-            handleNotifications);
+            handleNotifications)
+        .then(_ => {
+          log("\r\n===== disconnect =====\r\n");
+          myDevice.gatt.disconnect();
+        })
       })
       .catch(error => {
         console.log('Argh! ' + error);
       });
     }
-  }
-  function disconnect() {
-    myDevice.gatt.disconnect();
   }
   
   function handleNotifications(event) {
@@ -78,7 +82,7 @@
     document.getElementById("input").value = "";
   }
   function str2ab(str) {
-    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var buf = new ArrayBuffer(str.length); // 1 byte for each char
     var bufView = new Uint8Array(buf);
     for (var i=0, strLen=str.length; i<strLen; i++) {
       bufView[i] = str.charCodeAt(i);
@@ -102,7 +106,7 @@
 </head>
 
 <body>
-  <div class="header">WEBBLE TERM 9</div>
+  <div class="header">WEBBLE TERM 1</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
