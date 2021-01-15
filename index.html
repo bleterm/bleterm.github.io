@@ -73,8 +73,11 @@
   
   function myKeyPress(event) {
     var x = event.charCode;
-    log(x);
-    myTxCharacteristic.writeValue([65 66 67]);
+    var buf = new ArrayBuffer(1); // 1 byte for each char
+    var bufView = new Uint8Array(buf);
+    bufView[0] = x;
+    log(String.fromCharCode(x));
+    myTxCharacteristic.writeValue(buf);
   }
   
   function myKeyDown(event) {
@@ -122,7 +125,7 @@
 </head>
 
 <body onload="connect()">
-  <div class="header">WEBBLE TERM 16</div>
+  <div class="header">WEBBLE TERM 17</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
