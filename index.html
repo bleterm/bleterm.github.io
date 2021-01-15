@@ -85,7 +85,9 @@
     return buf;
   }
   function log(str) {
-    document.getElementById("term").value += str;
+    var elem = document.getElementById("term");
+    elem.value += str;
+    elem.scrollTop = elem.scrollHeight;
   }
 </script>
 
