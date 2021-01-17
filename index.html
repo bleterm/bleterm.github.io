@@ -58,6 +58,7 @@
   }
   
   function onDisconnected(event) {
+    connected = False;
     log("\r\n===== " + myDevice.name + " is disconnected =====\r\n")
   }
   
@@ -66,9 +67,8 @@
       if (myRxCharacteristic) {
           myRxCharacteristic.removeEventListener('characteristicvaluechanged',
               handleNotifications);
-          myDevice.gatt.disconnect();
-        };
       }
+      myDevice.gatt.disconnect();
     }
   }
   
