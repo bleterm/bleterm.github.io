@@ -7,50 +7,35 @@ body{
 }
 
 div.header {
-  font-family: 'Open Sans', sans-serif;
-  padding-left: 0;
-  text-align: center;
-  vertical-align: middle;
-  font-weight: bolder;
-  font-size: 4vh;
-  color: white;
-  background-color: #42484a;
-  height: 50px;
-  line-height: 50px;
+  background-color: green;
+  position: absolute;
+  top = 0;
+  height: 5px;
   width: 100%;
 }
 
 div.terminal {
   position: absolute;
   width: 100%;
-  height: calc(100% - 50px);
+  height: 100%;
   background-color: #222;
   font-size: 15px;
   line-height: 1.5;
 }
 
 div.footer {
-  font-family: 'Teko', sans-serif;
-  padding: 0;
   position: absolute;
   display: flex;
   bottom: 0;
-  text-align: center;
-  vertical-align: middle;
-  font-weight: bold;
-  font-size: 4vh;
-  color: white;
-  background-color: #42484a;
-  height: 50px;
-  line-height: 50px;
+  background-color: red;
+  height: 5px;
   width: 100%;
 }
 
 div.inputfield {
-  text-align: left;
-  width: calc(100% - 250px);
+  width: 100%;
   background-color: inherit;
-  height: inherit;
+  height: 0;
 }
 
 div.button {
