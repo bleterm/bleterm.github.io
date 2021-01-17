@@ -33,9 +33,11 @@ div.footer {
 }
 
 div.inputfield {
-  width: 100%;
+  top: 200px;
+  left: -20px;
+  width: 50px
   background-color: inherit;
-  height: 0;
+  height: 50px;
 }
 
 div.button {
