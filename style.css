@@ -22,10 +22,11 @@ div.header {
 
 div.terminal {
   position: absolute;
-  font-size: 2vh;
   width: 100%;
   height: calc(100% - 50px);
   background-color: #222;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 div.footer {
