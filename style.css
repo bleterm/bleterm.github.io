@@ -32,6 +32,13 @@ div.footer {
   width: 100%;
 }
 
+div.key {
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+}
+
 div.inputfield {
   position: absolute;
   bottom: 200px;
