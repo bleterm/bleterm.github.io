@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.9\r\n";  
+    elem.value = "BLE Terminal v1.A\r\n";  
   }
 
   function connect() {
@@ -19,7 +19,6 @@
       navigator.bluetooth.requestDevice({
         filters: [{
           services: ['85660001-5AEE-11E7-907B-A6006AD3DBA0']
-          services: [serviceUuid]
         }]
       })
       .then(device => {
