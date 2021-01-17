@@ -67,10 +67,12 @@ input.input {
   font-family: 'Open Sans', sans-serif;
   color: white;
   font-size: 3vh;
+  top: 200px;
+  left: -20px;
+  width: 50px
   position: absolute;
   line-height: 50px;
-  width: inherit;
-  height: 0;
+  height: 50px;
   background-color: inherit;
   resize: none;
   border: none;
