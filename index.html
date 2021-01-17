@@ -9,16 +9,16 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.E\r\n";  
+    elem.value = "BLE Terminal v1.F\r\n";  
   }
 
   function connect() {
       let serviceUuid = "85660001-5AEE-11E7-907B-A6006AD3DBA0";
-      let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
-      let txCharacteristicUuid = "85660003-5AEE-11E7-907B-A6006AD3DBA0";
+      let rxCharacteristicUuid = "85660002-5aee-11e7-907b-a6006ad3Dba0";
+      let txCharacteristicUuid = "85660003-5aee-11e7-907b-a6006ad3Dba0";
       navigator.bluetooth.requestDevice({
         filters: [{
-          services: ['85660001-5AEE-11E7-907B-A6006AD3DBA0']
+          services: ['85660001-5aee-11e7-907b-a6006ad3Dba0']
         }]
       })
       .then(device => {
