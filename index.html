@@ -1,7 +1,7 @@
 <html>
 
 <script>
-  var connected = False;
+  var connected = false;
   var myDevice;
   var myService;
   var myRxCharacteristic;
@@ -9,22 +9,21 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.7\r\n";  
+    elem.value = "BLE Terminal v1.9\r\n";  
   }
 
   function connect() {
-    let serviceUuid = "85660001-5afe-11e7-907b-a6006ad3dba0";
-    let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
-    let txCharacteristicUuid = "85660003-5AEE-11E7-907B-A6006AD3DBA0";
-    navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
-      optionalServices: ['85660001-5AEE-11E7-907B-A6006AD3DBA0']
-      //filters: [{
-      //  services: ['85660001-5afe-11e7-907b-a6006ad3dba0']
-      //}]
-    })
-    .then(device => {
-      connected = True;
+      let serviceUuid = "85660001-5AEE-11E7-907B-A6006AD3DBA0";
+      let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
+      let txCharacteristicUuid = "85660003-5AEE-11E7-907B-A6006AD3DBA0";
+      navigator.bluetooth.requestDevice({
+        filters: [{
+          services: ['85660001-5AEE-11E7-907B-A6006AD3DBA0']
+          services: [serviceUuid]
+        }]
+      })
+      .then(device => {
+      connected = true;
       myDevice = device;
       // Set up event listener for when device gets disconnected.
       device.addEventListener('gattserverdisconnected', onDisconnected);
@@ -58,7 +57,7 @@
   }
   
   function onDisconnected(event) {
-    connected = False;
+    connected = false;
     log("\r\n===== " + myDevice.name + " is disconnected =====\r\n")
   }
   
