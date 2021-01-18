@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.K\r\n";  
+    elem.value = "BLE Terminal v1.M\r\n";  
   }
 
   function connect() {
@@ -25,6 +25,7 @@
         }]
       })
       .then(device => {
+        log('selected'+device.name+'\r\n');
       connected = true;
       myDevice = device;
       // Set up event listener for when device gets disconnected.
@@ -32,21 +33,25 @@
       return device.gatt.connect();
     })
     .then(server => {
-      console.log('Getting Service...');
+        log('connected\r\n');
+      log('Getting Service\r\n');
       return server.getPrimaryService(serviceUuid);
     })
     .then(service => {
       myService = service;
-      console.log('Getting Characteristic...');
+      log('Getting tx Characteristic\r\n');
       return service.getCharacteristic(txCharacteristicUuid);
     })
     .then(characteristic => {
+        log('Getting rx Characteristic\r\n');
       myTxCharacteristic = characteristic;
       return myService.getCharacteristic(rxCharacteristicUuid);
     })
     .then(characteristic => {
+        log('subscribe\r\n');
       myRxCharacteristic = characteristic;
-      return myRxCharacteristic.startNotifications().then(_ => {
+      return myRxCharacteristic.startNotifications()
+        .then(_ => {
         console.log('> Notifications started');
         log("===== " + myDevice.name + " is connected =====\r\n");
         myRxCharacteristic.addEventListener('characteristicvaluechanged',
@@ -64,6 +69,7 @@
   }
   
   function disconnect() {
+    log('disconnecting\r\n');
     if (connected) {
       if (myRxCharacteristic) {
           myRxCharacteristic.removeEventListener('characteristicvaluechanged',
