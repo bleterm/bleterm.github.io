@@ -41,8 +41,8 @@ div.key {
 
 div.inputfield {
   position: absolute;
-  top: 200px;
-  left: 400px;
+  top: 20px;
+  left: 40px;
   width: 50px;
   background-color: inherit;
   height: 50px;
@@ -75,8 +75,8 @@ textarea.terminal {
 
 input.input {
   position: absolute;
-  top: 200px;
-  left: 400px;
+  top: 20px;
+  left: 40px;
   width: 50px;
   background-color: inherit;
   height: 50px;
