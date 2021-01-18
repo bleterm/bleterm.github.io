@@ -7,7 +7,7 @@ body{
 }
 
 div.header {
-  background-color: green;
+  background-color: rgb(60, 179, 113, 0.5);
   position: absolute;
   top: 0;
   height: 100px;
@@ -41,8 +41,8 @@ div.key {
 
 div.inputfield {
   position: absolute;
-  bottom: 0;
-  left: -20px;
+  top: 0;
+  left: 0;
   width: 50px;
   background-color: inherit;
   height: 100%;
@@ -74,7 +74,12 @@ textarea.terminal {
 }
 
 input.input {
-  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  background-color: inherit;
+  height: 100%;
   color: white;
   font-size: 3vh;
   line-height: 50px;
