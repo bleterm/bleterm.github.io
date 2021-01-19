@@ -9,10 +9,19 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.9\r\n";  
+    elem.value = "BLE Terminal v2.0\r\n";  
   }
 
   function connect() {
+    if (connected) {
+      if (myRxCharacteristic) {
+          myRxCharacteristic.removeEventListener('characteristicvaluechanged',
+              handleNotifications);
+      }
+      myDevice.gatt.disconnect();
+    }
+    else
+    {  
       let serviceUuid = '85660001-5aee-11e7-907b-a6006ad3dba0';
 //      let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
 //      let txCharacteristicUuid = "85660003-5AEE-11E7-907B-A6006AD3DBA0";
@@ -26,41 +35,42 @@
       })
       .then(device => {
         log('selected'+device.name+'\r\n');
-      connected = true;
-      myDevice = device;
-      // Set up event listener for when device gets disconnected.
-      device.addEventListener('gattserverdisconnected', onDisconnected);
-      return device.gatt.connect();
-    })
-    .then(server => {
+        connected = true;
+        myDevice = device;
+        // Set up event listener for when device gets disconnected.
+        device.addEventListener('gattserverdisconnected', onDisconnected);
+        return device.gatt.connect();
+      })
+      .then(server => {
         log('connected\r\n');
-      log('Getting Service\r\n');
-      return server.getPrimaryService(serviceUuid);
-    })
-    .then(service => {
-      myService = service;
-      log('Getting tx Characteristic\r\n');
-      return service.getCharacteristic(txCharacteristicUuid);
-    })
-    .then(characteristic => {
-        log('Getting rx Characteristic\r\n');
-      myTxCharacteristic = characteristic;
-      return myService.getCharacteristic(rxCharacteristicUuid);
-    })
-    .then(characteristic => {
-        log('subscribe\r\n');
-      myRxCharacteristic = characteristic;
-      return myRxCharacteristic.startNotifications()
-        .then(_ => {
-        console.log('> Notifications started');
-        log("===== " + myDevice.name + " is connected =====\r\n");
-        myRxCharacteristic.addEventListener('characteristicvaluechanged',
-            handleNotifications);
+        log('Getting Service\r\n');
+        return server.getPrimaryService(serviceUuid);
+      })
+      .then(service => {
+        myService = service;
+        log('Getting tx Characteristic\r\n');
+        return service.getCharacteristic(txCharacteristicUuid);
+      })
+      .then(characteristic => {
+          log('Getting rx Characteristic\r\n');
+        myTxCharacteristic = characteristic;
+        return myService.getCharacteristic(rxCharacteristicUuid);
+      })
+      .then(characteristic => {
+          log('subscribe\r\n');
+        myRxCharacteristic = characteristic;
+        return myRxCharacteristic.startNotifications()
+          .then(_ => {
+          console.log('> Notifications started');
+          log("===== " + myDevice.name + " is connected =====\r\n");
+          myRxCharacteristic.addEventListener('characteristicvaluechanged',
+              handleNotifications);
+        });
+      })
+      .catch(error => {
+        console.log('Argh! ' + error);
       });
-    })
-    .catch(error => {
-      console.log('Argh! ' + error);
-    });
+    }
   }
   
   function onDisconnected(event) {
@@ -100,6 +110,7 @@
   function myKeyDown(event) {
     var x = event.keyCode;
     var s = document.getElementById("input").value;
+    document.getElementById("input").value = "";
     if(s.length>0) {
       log(s);
       myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
@@ -116,7 +127,6 @@
       log("Tab");
       myTxCharacteristic.writeValue(Uint8Array.of(9));
     }
-    document.getElementById("input").value = "";
   }
   
   function send() {
