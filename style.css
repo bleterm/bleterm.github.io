@@ -13,6 +13,12 @@ div.header {
   top: 0;
   height: 100px;
   width: 100%;
+  border-style: solid;
+  border-right-width: 5px;
+  border-left-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  border-color: red;
 }
 
 div.terminal {
@@ -35,9 +41,15 @@ div.footer {
 
 div.key {
   position: absolute;
-  bottom: 0;
-  height: 100px;
+  bottom: -100px;
+  height: 200px;
   width: 100%;
+  border-style: solid;
+  border-right-width: 5px;
+  border-left-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  border-color: yellow;
 }
 
 div.inputfield {
