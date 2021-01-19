@@ -8,7 +8,6 @@ body{
 }
 
 div.header {
-  background-color: rgb(60, 179, 113, 0.5);
   position: absolute;
   top: 0;
   height: 100px;
