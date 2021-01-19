@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.7\r\n";  
+    elem.value = "BLE Terminal v1.8\r\n";  
   }
 
   function connect() {
@@ -152,8 +152,6 @@
   <div class="header" onclick="connect()"> </div>
   <div class="inputfield">
     <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)" onkeypress="myKeyPress(event)">
-  </div>
-  <div class="footer">
   </div>
   <div class="key" onclick="send()"></div>
 </body>
