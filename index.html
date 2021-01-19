@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.P\r\n";  
+    elem.value = "BLE Terminal v1.Q\r\n";  
   }
 
   function connect() {
@@ -87,9 +87,11 @@
   
   function myKeyPress(event) {
     var x = event.charCode;
-    var buf = new ArrayBuffer(1); // 1 byte for each char
+    var buf = new ArrayBuffer(3); // 1 byte for each char
     var bufView = new Uint8Array(buf);
-    bufView[0] = x;
+    bufView[0] = 0x31;
+    bufView[1] = 0x32;
+    bufView[2] = 0x33;
     log(String.fromCharCode(x));
     myTxCharacteristic.writeValue(buf);
     document.getElementById("input").value = "";
