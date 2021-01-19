@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v1.R\r\n";  
+    elem.value = "BLE Terminal v1.S\r\n";  
   }
 
   function connect() {
@@ -100,8 +100,8 @@
       log("Tab");
       myTxCharacteristic.writeValue(Uint8Array.of(9));
     }
-    else if(s.length>0) {
-      myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
+    else if(document.getElementById("input").value.length>0) {
+      myTxCharacteristic.writeValue(Uint8Array.of(document.getElementById("input").value.charCodeAt(0)));
     }    
     document.getElementById("input").value = "";
   }
