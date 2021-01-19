@@ -14,8 +14,8 @@ div.header {
   height: 100px;
   width: 100%;
   border-style: solid;
-  border-right-width: 5px;
-  border-left-width: 0;
+  border-right-width: 0;
+  border-left-width: 5px;
   border-top-width: 0;
   border-bottom-width: 0;
   border-color: red;
@@ -45,8 +45,8 @@ div.key {
   height: 200px;
   width: 100%;
   border-style: solid;
-  border-right-width: 5px;
-  border-left-width: 0;
+  border-right-width: 0;
+  border-left-width: 5px;
   border-top-width: 0;
   border-bottom-width: 0;
   border-color: yellow;
