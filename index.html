@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v2.1\r\n";  
+    elem.value = "BLE Terminal v2.2\r\n";  
   }
 
   function connect() {
@@ -160,7 +160,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body onload="startup()">
+<body onload="startup()" ondblclick="send()">
   <div class="header">BLE Term</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
