@@ -153,16 +153,11 @@
 <head>
   <title>BLETerm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <! --   <meta name="mobile-web-app-capable" content="yes">    -->
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body onload="startup()">
-  <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="header" onclick="send()" > </div>
-  <div class="inputfield">
-    <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
-  </div>
-  <! --  onclick="connect()"   <div class="key" onclick="send()"></div>  -->
+  <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
 </body>
 </html>
