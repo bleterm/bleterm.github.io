@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v2.2\r\n";  
+    elem.value = "BLE Terminal v2.3\r\n";  
   }
 
   function connect() {
@@ -133,7 +133,10 @@
     document.getElementById("input").focus();
     //myTxCharacteristic.writeValue(str2ab(data))
     //document.getElementById("input").value = "";
+    event.stopPropagation();
+    event.preventDefault();
   }
+  
   function str2ab(str) {
     var buf = new ArrayBuffer(str.length); // 1 byte for each char
     var bufView = new Uint8Array(buf);
