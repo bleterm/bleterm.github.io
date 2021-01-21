@@ -75,17 +75,21 @@ textarea.terminal {
   background-color: inherit;
   resize: none;
   border: none;
+  word-break: break-all;
 }
 
 input.input {
+  position: absolute;
+  top: 50px;
+  left: 100px;
   font-family: 'Open Sans', sans-serif;
   color: white;
   font-size: 3vh;
   position: absolute;
   line-height: 50px;
-  width: inherit;
-  height: inherit;
-  background-color: inherit;
+  width: 50px;
+  height: 50px;
+  background-color: yellow;
   resize: none;
   border: none;
   white-space: nowrap;
