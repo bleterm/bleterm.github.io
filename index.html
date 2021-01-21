@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v3.1\r\nClick to connect\r\nDouble click to type\r\n"; 
+    elem.value = "BLE Terminal v3.2\r\nClick to connect\r\nDouble click to type\r\n"; 
   }
   
   function connect() {
@@ -140,7 +140,7 @@
   }
   function log(str) {
     var elem = document.getElementById("term");
-    if(elem.textLength>32768)
+    if(elem.textLength>1024)
       elem.value = elem.value.substr(str.length) + str;
     else
       elem.value += str;
