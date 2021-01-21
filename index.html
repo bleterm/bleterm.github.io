@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v3.0\r\nClick to connect\r\nDouble click to type\r\n"; 
+    elem.value = "BLE Terminal v3.1\r\nClick to connect\r\nDouble click to type\r\n"; 
   }
   
   function connect() {
@@ -140,7 +140,10 @@
   }
   function log(str) {
     var elem = document.getElementById("term");
-    elem.value += str;
+    if(elem.textLength>32768)
+      elem.value = elem.value.substr(str.length) + str;
+    else
+      elem.value += str;
     elem.scrollTop = elem.scrollHeight;
   }
   
@@ -157,7 +160,7 @@
 </head>
 
 <body onload="startup()" onclick="connect()" ondblclick="send()">
-  <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
+  <div class="terminal"><textarea id="term" readonly spellcheck="false" class="terminal"></textarea></div>
   
   <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
    
