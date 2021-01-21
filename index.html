@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v2.3\r\n";  
+    elem.value = "BLE Terminal v2.4\r\n";  
   }
 
   function connect() {
@@ -164,27 +164,9 @@
 </head>
 
 <body onload="startup()" ondblclick="send()">
-  <div class="header">BLE Term</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
-  <div class="footer">
-    <div class="inputfield">
-      <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
-    </div>
-      <div class="button" style="background-color: black;">
-        <button onclick="send()">
-          <i class="fa fa-paper-plane"></i>
-        </button>
-      </div>
-      <div id="connect" class="button" style="background-color: green;" >
-        <button onclick="connect()">
-          <i class="fa fa-plug"></i>
-        </button>
-      </div>
-      <div class="button" style="background-color: red;">
-        <button onclick="disconnect()">
-          <i class="fa fa-times"></i>
-        </button>
-      </div>
-  </div>
+  
+  <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
+   
 </body>
 </html>
