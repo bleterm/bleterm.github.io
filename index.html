@@ -1,83 +1,153 @@
 <html>
 
 <script>
-  var myCharacteristic;
-
-  var deviceName;
-
-  function connect() {
-    let serviceUuid = "0000ffe0-0000-1000-8000-00805f9b34fb";
-
-    let characteristicUuid = "0000ffe1-0000-1000-8000-00805f9b34fb";
-
-    navigator.bluetooth.requestDevice({filters: [{services: [serviceUuid]}]})
-    .then(device => {
-      log('Connecting...');
-      deviceName = device.name;
-      return device.gatt.connect();
-    })
-    .then(server => {
-      console.log('Getting Service...');
-      return server.getPrimaryService(serviceUuid);
-    })
-    .then(service => {
-      console.log('Getting Characteristic...');
-      return service.getCharacteristic(characteristicUuid);
-    })
-    .then(characteristic => {
-      myCharacteristic = characteristic;
-      return myCharacteristic.startNotifications().then(_ => {
-        console.log('> Notifications started');
-        log("Connected to: " + deviceName);
-        myCharacteristic.addEventListener('characteristicvaluechanged',
-            handleNotifications);
-      });
-    })
-    .catch(error => {
-      console.log('Argh! ' + error);
-    });
+  var connected = false;
+  var myDevice;
+  var myService;
+  var myRxCharacteristic;
+  var myTxCharacteristic;
+  
+  function startup() {
+    var elem = document.getElementById("term");
+    elem.value = "BLE Terminal v2.1\r\n";  
   }
 
-  function disconnect() {
-    if (myCharacteristic) {
-      myCharacteristic.stopNotifications()
-      .then(_ => {
-        console.log('> Notifications stopped');
-        log("Disconnected")
-        myCharacteristic.removeEventListener('characteristicvaluechanged',
-            handleNotifications);
+  function connect() {
+    if (connected) {
+      if (myRxCharacteristic) {
+          myRxCharacteristic.removeEventListener('characteristicvaluechanged',
+              handleNotifications);
+      }
+      myDevice.gatt.disconnect();
+    }
+    else
+    {  
+      let serviceUuid = '85660001-5aee-11e7-907b-a6006ad3dba0';
+//      let rxCharacteristicUuid = "85660002-5AEE-11E7-907B-A6006AD3DBA0";
+//      let txCharacteristicUuid = "85660003-5AEE-11E7-907B-A6006AD3DBA0";
+      let rxCharacteristicUuid = '85660002-5aee-11e7-907b-a6006ad3dba0';
+      let txCharacteristicUuid = '85660003-5aee-11e7-907b-a6006ad3dba0';
+      navigator.bluetooth.requestDevice({
+        filters: [{
+//          services: ['5AEE-11E7-907B-A6006AD3DBA0']          
+          services: ['85660001-5aee-11e7-907b-a6006ad3dba0']
+        }]
+      })
+      .then(device => {
+        log('selected'+device.name+'\r\n');
+        connected = true;
+        myDevice = device;
+        // Set up event listener for when device gets disconnected.
+        device.addEventListener('gattserverdisconnected', onDisconnected);
+        return device.gatt.connect();
+      })
+      .then(server => {
+        log('connected\r\n');
+        log('Getting Service\r\n');
+        return server.getPrimaryService(serviceUuid);
+      })
+      .then(service => {
+        myService = service;
+        log('Getting tx Characteristic\r\n');
+        return service.getCharacteristic(txCharacteristicUuid);
+      })
+      .then(characteristic => {
+          log('Getting rx Characteristic\r\n');
+        myTxCharacteristic = characteristic;
+        return myService.getCharacteristic(rxCharacteristicUuid);
+      })
+      .then(characteristic => {
+          log('subscribe\r\n');
+        myRxCharacteristic = characteristic;
+        return myRxCharacteristic.startNotifications()
+          .then(_ => {
+          console.log('> Notifications started');
+          log("===== " + myDevice.name + " is connected =====\r\n");
+          myRxCharacteristic.addEventListener('characteristicvaluechanged',
+              handleNotifications);
+        });
       })
       .catch(error => {
         console.log('Argh! ' + error);
       });
     }
   }
-
+  
+  function onDisconnected(event) {
+    connected = false;
+    log("\r\n===== " + myDevice.name + " is disconnected =====\r\n")
+  }
+  
+  function disconnect() {
+    log('disconnecting\r\n');
+    if (connected) {
+      if (myRxCharacteristic) {
+          myRxCharacteristic.removeEventListener('characteristicvaluechanged',
+              handleNotifications);
+      }
+      myDevice.gatt.disconnect();
+    }
+  }
+  
   function handleNotifications(event) {
     let value = event.target.value;
-    log(deviceName + "> " + new TextDecoder().decode(value));
+    log( new TextDecoder().decode(value));
     console.log('> Received: ' + new TextDecoder().decode(value));
   }
-
-  function send() {
-    var data = document.getElementById("input").value;
-    log("You> " + data);
-    myCharacteristic.writeValue(str2ab(data+"\n"))
+  
+  function myKeyPress(event) {
+    var x = event.charCode;
+    var buf = new ArrayBuffer(1); // 1 byte for each char
+    var bufView = new Uint8Array(buf);
+    bufView[0] = x;
+    log(String.fromCharCode(x));
+    if(connected) {
+      myTxCharacteristic.writeValue(buf);
+    }
     document.getElementById("input").value = "";
   }
-
+  
+  function myKeyDown(event) {
+    var x = event.keyCode;
+    var s = document.getElementById("input").value;
+    document.getElementById("input").value = "";
+    if(s.length>0) {
+      log(s);
+      myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
+    }  
+    else if (x==13) {
+      log("CR\r\n");
+      myTxCharacteristic.writeValue(Uint8Array.of(13, 10));
+    }
+    else if (x==8) {
+      log("BS");
+      myTxCharacteristic.writeValue(Uint8Array.of(8));
+    }
+    else if (x==9) {
+      log("Tab");
+      myTxCharacteristic.writeValue(Uint8Array.of(9));
+    }
+  }
+  
+  function send() {
+    document.getElementById("input").focus();
+    //myTxCharacteristic.writeValue(str2ab(data))
+    //document.getElementById("input").value = "";
+  }
   function str2ab(str) {
-    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
-    var bufView = new Uint16Array(buf);
+    var buf = new ArrayBuffer(str.length); // 1 byte for each char
+    var bufView = new Uint8Array(buf);
     for (var i=0, strLen=str.length; i<strLen; i++) {
       bufView[i] = str.charCodeAt(i);
     }
     return buf;
   }
-
   function log(str) {
-    document.getElementById("term").value += str+"\n";
+    var elem = document.getElementById("term");
+    elem.value += str;
+    elem.scrollTop = elem.scrollHeight;
   }
+  
 </script>
 
 <head>
@@ -90,12 +160,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
-  <div class="header">WEB-BLUETOOTH TERMINAL</div>
+<body onload="startup()">
+  <div class="header">BLE Term</div>
   <div class="terminal"><textarea id="term" readonly class="terminal"></textarea></div>
   <div class="footer">
     <div class="inputfield">
-      <input id ="input" type="text" class="input" placeholder="Write something to send here...">
+      <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
     </div>
       <div class="button" style="background-color: black;">
         <button onclick="send()">
