@@ -116,7 +116,7 @@
       myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
     }  
     else if (x==13) {
-      log("CR");
+      log("CR\r\n");
       myTxCharacteristic.writeValue(Uint8Array.of(13, 10));
     }
     else if (x==8) {
