@@ -90,6 +90,7 @@ input.input {
   color: white;
   font-size: 3vh;
   background-color: inherit;
+  width: 50px;
   resize: none;
   border: none;
   white-space: nowrap;
