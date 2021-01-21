@@ -84,7 +84,7 @@ textarea.terminal {
 
 input.input {
   position: absolute;
-  top: 50px;
+  bottom: 20px;
   left: 100px;
   font-family: 'Open Sans', sans-serif;
   color: white;
@@ -92,7 +92,7 @@ input.input {
   position: absolute;
   line-height: 50px;
   width: 50px;
-  height: 50px;
+  height: 20px;
   background-color: yellow;
   resize: none;
   border: none;
