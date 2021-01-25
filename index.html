@@ -9,7 +9,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v3.4\r\nClick to connect\r\nDouble click to type\r\n"; 
+    elem.value = "BLE Terminal v3.5\r\nClick to connect\r\nThen double click to show keyboard and click to hide it\r\n"; 
   }
   
   function connect() {
@@ -27,7 +27,6 @@
         }]
       })
       .then(device => {
-        log('selected'+device.name+'\r\n');
         connected = true;
         myDevice = device;
         // Set up event listener for when device gets disconnected.
@@ -35,26 +34,20 @@
         return device.gatt.connect();
       })
       .then(server => {
-        log('connected\r\n');
-        log('Getting Service\r\n');
         return server.getPrimaryService(serviceUuid);
       })
       .then(service => {
         myService = service;
-        log('Getting tx Characteristic\r\n');
         return service.getCharacteristic(txCharacteristicUuid);
       })
       .then(characteristic => {
-          log('Getting rx Characteristic\r\n');
         myTxCharacteristic = characteristic;
         return myService.getCharacteristic(rxCharacteristicUuid);
       })
       .then(characteristic => {
-          log('subscribe\r\n');
         myRxCharacteristic = characteristic;
         return myRxCharacteristic.startNotifications()
           .then(_ => {
-          console.log('> Notifications started');
           log("===== " + myDevice.name + " is connected =====\r\n");
           myRxCharacteristic.addEventListener('characteristicvaluechanged',
               handleNotifications);
@@ -105,19 +98,15 @@
     var s = document.getElementById("input").value;
     document.getElementById("input").value = "";
     if(s.length>0) {
-      log(s);
       myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
     }  
     else if (x==13) {
-      log("CR\r\n");
       myTxCharacteristic.writeValue(Uint8Array.of(13, 10));
     }
     else if (x==8) {
-      log("BS");
       myTxCharacteristic.writeValue(Uint8Array.of(8));
     }
     else if (x==9) {
-      log("Tab");
       myTxCharacteristic.writeValue(Uint8Array.of(9));
     }
   }
