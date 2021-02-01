@@ -6,10 +6,13 @@
   var myService;
   var myRxCharacteristic;
   var myTxCharacteristic;
+  var keyboard = false;
+  var count = 0;
+  var keytime = Date.now();
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v3.6\r\nClick to connect\r\nThen double click to show keyboard and click again to hide it\r\n"; 
+    elem.value = "BLE Terminal v3.7\r\nClick to connect, to show/hide keyboard\r\nType 3 spaces withing 1 sec or refresh/reload the page to disconnect\r\n"; 
   }
   
   function connect() {
@@ -57,6 +60,21 @@
         console.log('Argh! ' + error);
       });
     }
+    else
+    {
+      if(keyboard)
+      {
+        keyboard = false;
+      }
+      else
+      {
+        keyboard = true;
+        count = 0;
+        document.getElementById("input").focus();
+      }
+    }
+    event.stopPropagation();
+    event.preventDefault();        
   }
   
   function onDisconnected(event) {
@@ -99,6 +117,28 @@
     document.getElementById("input").value = "";
     if(s.length>0) {
       myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
+      if(s[0]==' ')
+      {
+        if(Date.now() - keytime < 500)
+        {
+          count = count + 1;
+          if(count==3)
+          {
+            if(connected)
+            {
+              if (myRxCharacteristic) {
+                  myRxCharacteristic.removeEventListener('characteristicvaluechanged', handleNotifications);
+              }
+              myDevice.gatt.disconnect();
+            }
+          }
+        }
+        else
+          count = 1;
+        keytime = Date.now();
+      }
+      else
+        count = 0;
     }  
     else if (x==13) {
       myTxCharacteristic.writeValue(Uint8Array.of(13, 10));
@@ -148,7 +188,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body onload="startup()" onclick="connect()" ondblclick="send()">
+<body onload="startup()" onclick="connect()">
   <div class="terminal"><textarea id="term" readonly spellcheck="false" class="terminal"></textarea></div>
   
   <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
