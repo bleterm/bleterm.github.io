@@ -1,3 +1,3 @@
 # bleterm.github.io
-Web Ble Terminal
-v5, v6 working
+Web BLE Terminal for BLE-UART adaptors from www.BLE-SERIAL.com
+v4.0 working
