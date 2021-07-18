@@ -12,7 +12,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v3.7\r\nClick to connect, to show/hide keyboard\r\nType 3 spaces withing 1 sec or refresh/reload the page to disconnect\r\n"; 
+    elem.value = "BLE Terminal v3.8\r\nClick or tap to connect, or to show/hide keyboard\r\nType SPACE 3 times within 1 sec or refresh/reload the page to disconnect\r\n"; 
   }
   
   function connect() {
@@ -188,10 +188,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body onload="startup()" onclick="connect()">
+<body font-family:'Open Sans' onload="startup()" onclick="connect()">
   <div class="terminal"><textarea id="term" readonly spellcheck="false" class="terminal"></textarea></div>
   
   <input id ="input" type="text" class="input" onkeyup="myKeyDown(event)">
-   
+  Hello 00:08:59 Temperature = 17.4 ºC  
 </body>
 </html>
