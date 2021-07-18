@@ -12,7 +12,7 @@
   
   function startup() {
     var elem = document.getElementById("term");
-    elem.value = "BLE Terminal v4.0\r\n\r\nTap on the screen to discover nearby BLE UART adapters from ble-serial.com,\r\nor to show/hide the keyboard once connected.\r\n\r\nHit the space bar 3 times within 1 second or refresh/reload the page to disconnect.\r\n\r\n"; 
+    elem.value = "BLE Terminal v4.0\r\n\r\nTap on the screen to discover nearby BLE UART adapters from ble-serial.com,\r\nor to show/hide the keyboard once connected.\r\n\r\nHit the space bar 3 times within 3 seconds or refresh/reload the page to disconnect.\r\n\r\n"; 
   }
   
   function connect() {
@@ -119,7 +119,7 @@
       myTxCharacteristic.writeValue(Uint8Array.of(s.charCodeAt(0)));
       if(s[0]==' ')
       {
-        if(Date.now() - keytime < 500)
+        if(Date.now() - keytime < 1000)
         {
           count = count + 1;
           if(count==3)
